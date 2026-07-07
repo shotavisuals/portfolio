@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — SHOTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0a0a;
+    --paper:#f5f5f3;
+    --mid:#8c8c86;
+    --line:#d8d8d4;
+    --hover:rgba(10,10,10,0.92);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  ::selection{ background:var(--ink); color:var(--paper); }
+
+  a{ color:inherit; text-decoration:none; }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .fade-up{ opacity:0; animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) forwards; }
+
+  @media (prefers-reduced-motion: reduce){
+    .fade-up{ animation:none !important; opacity:1 !important; }
+    .info-block{ transition:none !important; opacity:1 !important; transform:none !important; }
+    .status-msg.show{ animation:none !important; }
+    .logo, .submit-btn{ transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 5vw;
+  }
+
+  .logo{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:-0.02em;
+    display:inline-flex;
+    align-items:baseline;
+    transition:opacity .3s ease, transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .logo:hover{ opacity:.7; transform:translateY(-1px); }
+  .logo:active{ transform:translateY(0) scale(.98); transition-duration:.1s; }
+  .logo span{ color:var(--mid); font-weight:400; }
+
+  nav{ display:flex; gap:34px; }
+  nav a{
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    position:relative;
+    padding-bottom:3px;
+    transition:color .25s ease;
+  }
+  nav a::after{
+    content:''; position:absolute; left:0; bottom:0;
+    width:0%; height:1px; background:var(--ink);
+    transition:width .3s cubic-bezier(.2,.8,.2,1);
+  }
+  nav a:hover::after{ width:100%; }
+  nav a.current::after{ width:100%; }
+  nav a:hover{ color:var(--ink); }
+
+  .nav-toggle{ display:none; background:none; border:none; cursor:pointer; transition:transform .2s ease; }
+  .nav-toggle:hover{ transform:scale(1.08); }
+
+  /* ---------- Contact Hero ---------- */
+  .contact-hero{
+    padding:12vh 5vw 6vh;
+    border-bottom:1px solid var(--line);
+  }
+  .contact-hero .eyebrow{
+    font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--mid); margin-bottom:22px; display:block;
+  }
+  .contact-hero h1{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-weight:600;
+    font-size:clamp(34px, 6vw, 76px);
+    line-height:1.05;
+    letter-spacing:-0.03em;
+    max-width:18ch;
+  }
+  .contact-hero p{
+    margin-top:24px;
+    max-width:52ch;
+    font-size:14px;
+    line-height:1.8;
+    color:var(--mid);
+  }
+
+  /* ---------- Contact body ---------- */
+  .contact-body{
+    flex:1;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+  }
+  .contact-body .panel{ padding:8vh 5vw; }
+  .contact-body .panel:first-child{ border-right:1px solid var(--line); }
+
+  /* ---------- Form ---------- */
+  @keyframes statusIn{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .field{ margin-bottom:28px; position:relative; }
+  .field label{
+    display:block; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--mid); margin-bottom:10px;
+    transition:color .25s ease;
+  }
+  .field:focus-within label{ color:var(--ink); }
+  .field input,
+  .field select,
+  .field textarea{
+    width:100%;
+    background:none;
+    border:none;
+    border-bottom:1px solid var(--line);
+    padding:10px 2px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .3s ease, padding-left .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .field select{ appearance:none; cursor:pointer; }
+  .field textarea{ resize:vertical; min-height:120px; line-height:1.6; }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus{ border-bottom-color:var(--ink); padding-left:8px; }
+  .field input::placeholder,
+  .field textarea::placeholder{ color:#b7b7b1; transition:color .25s ease; }
+  .field input:focus::placeholder,
+  .field textarea:focus::placeholder{ color:#d2d2cc; }
+
+  .row2{ display:flex; gap:24px; }
+  .row2 .field{ flex:1; }
+
+  .submit-btn{
+    margin-top:12px;
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--ink);
+    color:var(--paper);
+    border:1px solid var(--ink);
+    padding:16px 30px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    cursor:pointer;
+    transition:opacity .25s ease, transform .25s cubic-bezier(.2,.8,.2,1), background .3s ease, color .3s ease, letter-spacing .3s ease;
+  }
+  .submit-btn:hover{ transform:translateX(4px); letter-spacing:.16em; }
+  .submit-btn:active{ transform:translateX(2px) scale(.98); }
+  .submit-btn:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+
+  .form-note{
+    margin-top:16px;
+    font-size:11.5px;
+    color:var(--mid);
+    letter-spacing:.02em;
+  }
+
+  .status-msg{
+    margin-top:18px;
+    font-size:13px;
+    display:none;
+  }
+  .status-msg.show{ display:block; animation:statusIn .5s cubic-bezier(.2,.8,.2,1) forwards; }
+  .status-msg.ok{ color:var(--ink); }
+  .status-msg.error{ color:#b5433a; }
+
+  /* ---------- Info panel ---------- */
+  .info-list{ display:flex; flex-direction:column; gap:36px; }
+  .info-block{
+    opacity:0; transform:translateY(16px);
+    transition:opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .info-block.in-view{ opacity:1; transform:translateY(0); }
+  .info-block .label{
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--mid); margin-bottom:10px;
+  }
+  .info-block .value{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-size:19px; font-weight:500; letter-spacing:-0.01em;
+  }
+  .info-block .value a{ transition:color .25s ease; }
+  .info-block .value a:hover{ color:var(--mid); }
+  .info-block .sub{ margin-top:6px; font-size:12.5px; color:var(--mid); line-height:1.7; }
+  .info-block .sub a{
+    position:relative; width:fit-content; transition:color .25s ease;
+  }
+  .info-block .sub a::after{
+    content:''; position:absolute; left:0; bottom:-1px;
+    width:0%; height:1px; background:var(--ink);
+    transition:width .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .info-block .sub a:hover{ color:var(--ink); }
+  .info-block .sub a:hover::after{ width:100%; }
+
+  .divider{ border-top:1px solid var(--line); padding-top:32px; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:5vh 5vw;
+    border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:11px; color:var(--mid); letter-spacing:.05em;
+    flex-wrap:wrap; gap:12px;
+  }
+  footer a{ position:relative; width:fit-content; transition:color .25s ease; }
+  footer a::after{
+    content:''; position:absolute; left:0; bottom:-2px;
+    width:0%; height:1px; background:var(--ink);
+    transition:width .3s cubic-bezier(.2,.8,.2,1);
+  }
+  footer a:hover{ color:var(--ink); }
+  footer a:hover::after{ width:100%; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px){
+    nav{ display:none; }
+    .nav-toggle{ display:block; }
+    .contact-body{ grid-template-columns:1fr; }
+    .contact-body .panel:first-child{ border-right:none; border-bottom:1px solid var(--line); }
+    .row2{ flex-direction:column; gap:0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">SHOTA<span> / photography</span></a>
+  <nav>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#about">About</a>
+    <a href="contact.html" class="current">Contact</a>
+  </nav>
+</header>
+
+<section class="contact-hero">
+  <span class="eyebrow fade-up" style="animation-delay:.05s;">Contact</span>
+  <h1 class="fade-up" style="animation-delay:.15s;">撮影のご依頼</h1>
+  <h1 class="fade-up" style="animation-delay:.15s;">お問い合わせ</h1>
+  <p class="fade-up" style="animation-delay:.3s;">基本的に料金が発生するような案件は受け付けていません。ご了承ください。ポートレート・スナップ・風景など、ご依頼やご相談はこちらのフォームからお気軽にご連絡ください。内容を確認のうえ、ご返信いたします。</p>
+</section>
+
+<div class="contact-body">
+  <div class="panel">
+    <form id="contactForm" action="https://formspree.io/f/mlgyadlr" method="POST">
+      <input type="hidden" name="_subject" value="ポートフォリオサイトからのお問い合わせ">
+      <div class="row2">
+        <div class="field">
+          <label for="name">お名前</label>
+          <input type="text" id="name" name="name" placeholder="山田 太郎" required>
+        </div>
+        <div class="field">
+          <label for="email">メールアドレス</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="type">ご依頼の種類</label>
+          <select id="type" name="type" required>
+            <option value="" disabled selected>選択してください</option>
+            <option value="portrait">ポートレート撮影</option>
+            <option value="street">スナップ撮影</option>
+            <option value="landscape">風景撮影</option>
+            <option value="other">その他・ご相談</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">ご希望日</label>
+          <input type="date" id="date" name="date">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="message">お問い合わせ内容</label>
+        <textarea id="message" name="message" placeholder="撮影の目的、場所など詳しくお聞かせください。" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">送信する →</button>
+      <div class="form-note">送信いただいた内容は撮影のご依頼確認以外の目的には使用いたしません。</div>
+      <div class="status-msg ok" id="statusMsg">ご送信ありがとうございます。内容を確認のうえ、追ってご連絡いたします。</div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <div class="info-list">
+      <div class="info-block">
+        <div class="label">Social</div>
+        <div class="sub" style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+          <a href="https://www.instagram.com/shota.visuals/" target="_blank">Instagram</a>
+        </div>
+      </div>
+
+      <div class="info-block divider">
+        <div class="label">Based in</div>
+        <div class="value" style="font-size:15px;">Japan</div>
+        <div class="sub">関東近辺をベースに活動しています。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Shota Visuals</span>
+  <a href="index.html">← Back to Portfolio</a>
+</footer>
+
+<script>
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中...';
+    statusMsg.classList.remove('show', 'error');
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        submitBtn.textContent = '送信済み ✓';
+        statusMsg.textContent = 'ご送信ありがとうございます。内容を確認のうえ、追ってご連絡いたします。';
+        statusMsg.classList.add('ok');
+        form.reset();
+      } else {
+        throw new Error('send failed');
+      }
+    } catch (err) {
+      submitBtn.textContent = '送信できませんでした';
+      statusMsg.textContent = '送信に失敗しました。お手数ですが、メールにて直接ご連絡ください。';
+      statusMsg.classList.add('error');
+    }
+
+    void statusMsg.offsetWidth; // reflow to restart animation
+    statusMsg.classList.add('show');
+
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送信する →';
+    }, 2200);
+  });
+
+  // ------- Scroll reveal for info blocks -------
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if(entry.isIntersecting){
+        setTimeout(() => entry.target.classList.add('in-view'), i * 90);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.info-block').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
